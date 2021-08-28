@@ -13,17 +13,17 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - {
-            name: "ubuntu-emscripten",
-            os: ubuntu-latest,
-            build_type: "Release",
-            cc: "emcc",
-            cxx: "em++",
-            generators: "Ninja",
-            ccache: "OFF",
-            code_coverage: "OFF",
-            clang_format: "OFF",
-          }
+#        - {
+#            name: "ubuntu-emscripten",
+#            os: ubuntu-latest,
+#            build_type: "Release",
+#            cc: "emcc",
+#            cxx: "em++",
+#            generators: "Ninja",
+#            ccache: "OFF",
+#            code_coverage: "OFF",
+#            clang_format: "OFF",
+#          }
         - {
             name: "ubuntu-clang",
             os: ubuntu-latest,
@@ -206,13 +206,13 @@ jobs:
           ninja --version
           cmake --version
 
-      - uses: mymindstorm/setup-emsdk@v9
-        if: contains(matrix.config.name, 'emscripten')
-
-      - name: print emscripten version
-        if: contains(matrix.config.name, 'emscripten')
-        run: |
-          emcc --version
+#      - uses: mymindstorm/setup-emsdk@v9
+#        if: contains(matrix.config.name, 'emscripten')
+#
+#      - name: print emscripten version
+#        if: contains(matrix.config.name, 'emscripten')
+#        run: |
+#          emcc --version
 
       - name: Install dependencies on ubuntu
         if: startsWith(matrix.config.name, 'ubuntu')
@@ -239,28 +239,28 @@ jobs:
           ninja --version
           cmake --version
 
-      - name: Configure (EMSCRIPTEN)
-        if: contains(matrix.config.name, 'emscripten')
-        shell: bash
-        run: |
-          export CC=${{ matrix.config.CC }}
-          export CXX=${{ matrix.config.CXX }}
-          emcmake \
-            cmake \
-            -S MyApp \
-            -B MyApp/build \
-            -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
-            -DMYAPP_CI=ON \
-            -DMYAPP_ASAN=${{ matrix.config.asan }} \
-            -DMYAPP_LSAN=${{ matrix.config.lsan }} \
-            -DMYAPP_TSAN=${{ matrix.config.tsan }} \
-            -DMYAPP_UBSAN=${{ matrix.config.ubsan }} \
-            -DMYAPP_CODE_COVERAGE=${{ matrix.config.code_coverage }} \
-            -DMYAPP_VALGRIND=${{ matrix.config.valgrind }} \
-            -DMYAPP_CLANG_FORMAT_CHECK=${{ matrix.config.clang_format }} \
-            -DMYAPP_CLANG_FORMAT_FIX=${{ matrix.config.clang_format }} \
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -G "${{ matrix.config.generators }}"
+#      - name: Configure (EMSCRIPTEN)
+#        if: contains(matrix.config.name, 'emscripten')
+#        shell: bash
+#        run: |
+#          export CC=${{ matrix.config.CC }}
+#          export CXX=${{ matrix.config.CXX }}
+#          emcmake \
+#            cmake \
+#            -S MyApp \
+#            -B MyApp/build \
+#            -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+#            -DMYAPP_CI=ON \
+#            -DMYAPP_ASAN=${{ matrix.config.asan }} \
+#            -DMYAPP_LSAN=${{ matrix.config.lsan }} \
+#            -DMYAPP_TSAN=${{ matrix.config.tsan }} \
+#            -DMYAPP_UBSAN=${{ matrix.config.ubsan }} \
+#            -DMYAPP_CODE_COVERAGE=${{ matrix.config.code_coverage }} \
+#            -DMYAPP_VALGRIND=${{ matrix.config.valgrind }} \
+#            -DMYAPP_CLANG_FORMAT_CHECK=${{ matrix.config.clang_format }} \
+#            -DMYAPP_CLANG_FORMAT_FIX=${{ matrix.config.clang_format }} \
+#            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+#            -G "${{ matrix.config.generators }}"
 
       - name: Configure (CCACHE)
         if: startsWith(matrix.config.ccache, 'ON')
@@ -318,20 +318,20 @@ jobs:
           mkdir -p instdir
           cmake --install MyApp/build --strip --prefix=instdir
 
-      - name: Prepare Github Page
-        shell: bash
-        if: contains(matrix.config.name, 'emscripten')
-        run: |
-          mv MyApp/build/src/myapp.html MyApp/build/src/index.html
-          rm -rf MyApp/build/src/CMakeFiles
-          rm -f MyApp/build/src/cmake_install.cmake
-
-      - name: Deploy Github Page
-        uses: JamesIves/github-pages-deploy-action@4.1.4
-        if: contains(matrix.config.name, 'emscripten')
-        with:
-          branch: gh-pages
-          folder: MyApp/build/src/
+#      - name: Prepare Github Page
+#        shell: bash
+#        if: contains(matrix.config.name, 'emscripten')
+#        run: |
+#          mv MyApp/build/src/myapp.html MyApp/build/src/index.html
+#          rm -rf MyApp/build/src/CMakeFiles
+#          rm -f MyApp/build/src/cmake_install.cmake
+#
+#      - name: Deploy Github Page
+#        uses: JamesIves/github-pages-deploy-action@4.1.4
+#        if: contains(matrix.config.name, 'emscripten')
+#        with:
+#          branch: gh-pages
+#          folder: MyApp/build/src/
 
       - name: Tests
         shell: bash
