@@ -1,4 +1,4 @@
-name: MyApp
+name: CommonLib
 
 on:
   pull_request:
@@ -12,17 +12,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-#        - {
-#            name: "ubuntu-emscripten",
-#            os: ubuntu-latest,
-#            build_type: "Release",
-#            cc: "emcc",
-#            cxx: "em++",
-#            generators: "Ninja",
-#            ccache: "OFF",
-#            code_coverage: "OFF",
-#            clang_format: "OFF",
-#          }
         - {
             name: "ubuntu-clang",
             os: ubuntu-latest,
@@ -205,14 +194,6 @@ jobs:
           ninja --version
           cmake --version
 
-#      - uses: mymindstorm/setup-emsdk@v9
-#        if: contains(matrix.config.name, 'emscripten')
-#
-#      - name: print emscripten version
-#        if: contains(matrix.config.name, 'emscripten')
-#        run: |
-#          emcc --version
-
       - name: Install dependencies on ubuntu
         if: startsWith(matrix.config.name, 'ubuntu')
         run: |
@@ -238,29 +219,6 @@ jobs:
           ninja --version
           cmake --version
 
-#      - name: Configure (EMSCRIPTEN)
-#        if: contains(matrix.config.name, 'emscripten')
-#        shell: bash
-#        run: |
-#          export CC=${{ matrix.config.CC }}
-#          export CXX=${{ matrix.config.CXX }}
-#          emcmake \
-#            cmake \
-#            -S MyApp \
-#            -B MyApp/build \
-#            -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
-#            -DMYAPP_CI=ON \
-#            -DMYAPP_ASAN=${{ matrix.config.asan }} \
-#            -DMYAPP_LSAN=${{ matrix.config.lsan }} \
-#            -DMYAPP_TSAN=${{ matrix.config.tsan }} \
-#            -DMYAPP_UBSAN=${{ matrix.config.ubsan }} \
-#            -DMYAPP_CODE_COVERAGE=${{ matrix.config.code_coverage }} \
-#            -DMYAPP_VALGRIND=${{ matrix.config.valgrind }} \
-#            -DMYAPP_CLANG_FORMAT_CHECK=${{ matrix.config.clang_format }} \
-#            -DMYAPP_CLANG_FORMAT_FIX=${{ matrix.config.clang_format }} \
-#            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-#            -G "${{ matrix.config.generators }}"
-
       - name: Configure (CCACHE)
         if: startsWith(matrix.config.ccache, 'ON')
         shell: bash
@@ -268,20 +226,20 @@ jobs:
           export CC=${{ matrix.config.CC }}
           export CXX=${{ matrix.config.CXX }}
           cmake \
-            -S MyApp \
-            -B MyApp/build \
+            -S CommonLib \
+            -B CommonLib/build \
             -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
             -DCMAKE_C_COMPILER_LAUNCHER=ccache \
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-            -DMYAPP_CI=ON \
-            -DMYAPP_ASAN=${{ matrix.config.asan }} \
-            -DMYAPP_LSAN=${{ matrix.config.lsan }} \
-            -DMYAPP_TSAN=${{ matrix.config.tsan }} \
-            -DMYAPP_UBSAN=${{ matrix.config.ubsan }} \
-            -DMYAPP_CODE_COVERAGE=${{ matrix.config.code_coverage }} \
-            -DMYAPP_VALGRIND=${{ matrix.config.valgrind }} \
-            -DMYAPP_CLANG_FORMAT_CHECK=${{ matrix.config.clang_format }} \
-            -DMYAPP_CLANG_FORMAT_FIX=${{ matrix.config.clang_format }} \
+            -DCOMMONLIB_CI=ON \
+            -DCOMMONLIB_ASAN=${{ matrix.config.asan }} \
+            -DCOMMONLIB_LSAN=${{ matrix.config.lsan }} \
+            -DCOMMONLIB_TSAN=${{ matrix.config.tsan }} \
+            -DCOMMONLIB_UBSAN=${{ matrix.config.ubsan }} \
+            -DCOMMONLIB_CODE_COVERAGE=${{ matrix.config.code_coverage }} \
+            -DCOMMONLIB_VALGRIND=${{ matrix.config.valgrind }} \
+            -DCOMMONLIB_CLANG_FORMAT_CHECK=${{ matrix.config.clang_format }} \
+            -DCOMMONLIB_CLANG_FORMAT_FIX=${{ matrix.config.clang_format }} \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
             -G "${{ matrix.config.generators }}"
 
@@ -292,55 +250,40 @@ jobs:
           export CC=${{ matrix.config.CC }}
           export CXX=${{ matrix.config.CXX }}
           cmake \
-            -S MyApp \
-            -B MyApp/build \
+            -S CommonLib \
+            -B CommonLib/build \
             -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
-            -DMYAPP_CI=ON \
-            -DMYAPP_ASAN=${{ matrix.config.asan }} \
-            -DMYAPP_LSAN=${{ matrix.config.lsan }} \
-            -DMYAPP_TSAN=${{ matrix.config.tsan }} \
-            -DMYAPP_UBSAN=${{ matrix.config.ubsan }} \
-            -DMYAPP_CODE_COVERAGE=${{ matrix.config.code_coverage }} \
-            -DMYAPP_VALGRIND=${{ matrix.config.valgrind }} \
-            -DMYAPP_CLANG_FORMAT_CHECK=${{ matrix.config.clang_format }} \
-            -DMYAPP_CLANG_FORMAT_FIX=${{ matrix.config.clang_format }} \
+            -DCOMMONLIB_CI=ON \
+            -DCOMMONLIB_ASAN=${{ matrix.config.asan }} \
+            -DCOMMONLIB_LSAN=${{ matrix.config.lsan }} \
+            -DCOMMONLIB_TSAN=${{ matrix.config.tsan }} \
+            -DCOMMONLIB_UBSAN=${{ matrix.config.ubsan }} \
+            -DCOMMONLIB_CODE_COVERAGE=${{ matrix.config.code_coverage }} \
+            -DCOMMONLIB_VALGRIND=${{ matrix.config.valgrind }} \
+            -DCOMMONLIB_CLANG_FORMAT_CHECK=${{ matrix.config.clang_format }} \
+            -DCOMMONLIB_CLANG_FORMAT_FIX=${{ matrix.config.clang_format }} \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
             -G "${{ matrix.config.generators }}"
 
       - name: Build
         shell: bash
-        run: cmake --build MyApp/build --config ${{ matrix.config.build_type }}
+        run: cmake --build CommonLib/build --config ${{ matrix.config.build_type }}
 
       - name: Install Strip
         shell: bash
         run: |
           mkdir -p instdir
-          cmake --install MyApp/build --strip --prefix=instdir
-
-#      - name: Prepare Github Page
-#        shell: bash
-#        if: contains(matrix.config.name, 'emscripten')
-#        run: |
-#          mv MyApp/build/src/myapp.html MyApp/build/src/index.html
-#          rm -rf MyApp/build/src/CMakeFiles
-#          rm -f MyApp/build/src/cmake_install.cmake
-#
-#      - name: Deploy Github Page
-#        uses: JamesIves/github-pages-deploy-action@4.1.4
-#        if: contains(matrix.config.name, 'emscripten')
-#        with:
-#          branch: gh-pages
-#          folder: MyApp/build/src/
+          cmake --install CommonLib/build --strip --prefix=instdir
 
       - name: Tests
         shell: bash
-        working-directory: MyApp/build
+        working-directory: CommonLib/build
         run: ctest --C ${{ matrix.config.build_type }} --output-on-failure --no-tests=error
         if: always() && !contains(matrix.config.name, 'emscripten')
 
       - name: Benchmarks
         shell: bash
-        run: cmake --build MyApp/build --config ${{ matrix.config.build_type }} --target myapp_benchmarks_execute
+        run: cmake --build CommonLib/build --config ${{ matrix.config.build_type }} --target commonlib_benchmarks_execute
         if: always() && !contains(matrix.config.name, 'emscripten')
 
       - name: Pack
@@ -354,7 +297,7 @@ jobs:
       - name: Codecov
         if: always() && matrix.config.code_coverage == 'ON'
         shell: bash
-        working-directory: MyApp/build
+        working-directory: CommonLib/build
         run: |
           mkdir lcov
           wget -c https://github.com/linux-test-project/lcov/releases/download/v1.15/lcov-1.15.tar.gz -O - | tar -xz -C lcov/
@@ -372,28 +315,28 @@ jobs:
         with:
           name: 'z-${{ matrix.config.name }}-build_dev_logs'
           path: |
-            ./MyApp/build/**/*.txt
-            ./MyApp/build/**/*.gcda
-            ./MyApp/build/**/*.gcno
-            ./MyApp/build/**/*codecov*
-            ./MyApp/build/**/*.xml
-            ./MyApp/build/**/*.cmake
-            ./MyApp/build/**/*.log
-            ./MyApp/build/**/*.json
-            ./MyApp/build/**/*.gcov
-            ./MyApp/build/**/*.info
-            ./MyApp/build/**/.*
+            ./CommonLib/build/**/*.txt
+            ./CommonLib/build/**/*.gcda
+            ./CommonLib/build/**/*.gcno
+            ./CommonLib/build/**/*codecov*
+            ./CommonLib/build/**/*.xml
+            ./CommonLib/build/**/*.cmake
+            ./CommonLib/build/**/*.log
+            ./CommonLib/build/**/*.json
+            ./CommonLib/build/**/*.gcov
+            ./CommonLib/build/**/*.info
+            ./CommonLib/build/**/.*
             ./MyApp/build/**/*.h
             ./MyApp/build/**/*.hpp
             ./MyApp/build/**/*.c
             ./MyApp/build/**/*.cpp
-            !./MyApp/build/_deps
+            !./CommonLib/build/_deps
             !*/.git/**/*
           retention-days: 1
 
       - name: Upload
-        if: always()
         uses: actions/upload-artifact@v1
+        if: always()
         with:
           path: ./${{ matrix.config.name }}.7z
           name: ${{ matrix.config.name }}.7z
@@ -435,11 +378,11 @@ jobs:
           export CC=clang
           export CXX=clang++
           cmake \
-            -S MyApp \
-            -B MyApp/build \
+            -S CommonLib \
+            -B CommonLib/build \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DMYAPP_CI=ON \
-            -DMYAPP_CLANG_FORMAT_CHECK=ON \
+            -DCOMMONLIB_CI=ON \
+            -DCOMMONLIB_CLANG_FORMAT_CHECK=ON \
             -G "Ninja"
 
       - name: Check
@@ -447,7 +390,7 @@ jobs:
         run: | 
           export CC=clang
           export CXX=clang++
-          cmake --build MyApp/build --target myapp_clang_format_check
+          cmake --build CommonLib/build --target commonlib_clang_format_check
 
   clang-tidy:
     name: clang-tidy
@@ -475,11 +418,11 @@ jobs:
           export CC=clang
           export CXX=clang++
           cmake \
-            -S MyApp \
-            -B MyApp/build \
+            -S CommonLib \
+            -B CommonLib/build \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DMYAPP_CI=ON \
-            -DMYAPP_CLANG_TIDY_CHECK=ON \
+            -DCOMMONLIB_CI=ON \
+            -DCOMMONLIB_CLANG_TIDY_CHECK=ON \
             -G "Ninja"
 
       - name: Check
@@ -487,7 +430,7 @@ jobs:
         run: | 
           export CC=clang
           export CXX=clang++
-          cmake --build MyApp/build --target myapp_clang_tidy_check
+          cmake --build CommonLib/build --target commonlib_clang_tidy_check
 
   cppcheck:
     name: cppcheck
@@ -515,11 +458,11 @@ jobs:
           export CC=clang
           export CXX=clang++
           cmake \
-            -S MyApp \
-            -B MyApp/build \
+            -S CommonLib \
+            -B CommonLib/build \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DMYAPP_CI=ON \
-            -DMYAPP_CPPCHECK=ON \
+            -DCOMMONLIB_CI=ON \
+            -DCOMMONLIB_CPPCHECK=ON \
             -G "Ninja"
 
       - name: Check
@@ -527,4 +470,4 @@ jobs:
         run: | 
           export CC=clang
           export CXX=clang++
-          cmake --build MyApp/build --target myapp_cppcheck
+          cmake --build CommonLib/build --target commonlib_cppcheck

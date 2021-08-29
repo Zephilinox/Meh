@@ -8,6 +8,7 @@ include(CheckIsRoot)
 check_project_is_root(MYAPP_IS_ROOT)
 
 add_subdirectory("../MyLib" "${CMAKE_CURRENT_BINARY_DIR}/MyLib")
+add_subdirectory("../CommonLib" "${CMAKE_CURRENT_BINARY_DIR}/CommonLib")
 
 option(MYAPP_CI "We are running on CI. May change certain defaults." OFF)
 if (MYAPP_CI)
