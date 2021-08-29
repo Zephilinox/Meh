@@ -1,5 +1,13 @@
+if (TARGET imgui)
+    return()
+endif()
+
 include(SetSystemIncludes)
 include(CompilerWarnings)
+
+if (NOT CPM_SOURCE_CACHE)
+    set(CPM_SOURCE_CACHE "${PROJECT_SOURCE_DIR}/../.cpmcache/")
+endif()
 
 CPMAddPackage(
     NAME imgui

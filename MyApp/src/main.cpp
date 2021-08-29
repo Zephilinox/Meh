@@ -20,6 +20,8 @@
 #endif
 
 #include <MyLib/Library.hpp>
+#include <CommonLib/Window/WindowSDL.hpp>
+
 #include <imgui.h>
 #include <backends/imgui_impl_sdl.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -65,15 +67,9 @@ int main(int, char*[])
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-    auto* wnd = SDL_CreateWindow(
-        "MyApp",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        1280,
-        720,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+    auto window = meh::common::WindowSDL({ 1280, 720, "MyApp" });
 
-    auto* glc = SDL_GL_CreateContext(wnd);
+    auto* glc = SDL_GL_CreateContext(window.getRawWindow());
     SDL_GL_SetSwapInterval(0); // VSync off, though when running in a browser it may get overriden
 
 #ifndef __EMSCRIPTEN__
@@ -87,7 +83,7 @@ int main(int, char*[])
               << GLVersion.minor << std::endl;
 #endif
 
-    [[maybe_unused]] auto* rdr = SDL_CreateRenderer(wnd, -1, SDL_RENDERER_ACCELERATED);
+    [[maybe_unused]] auto* rdr = SDL_CreateRenderer(window.getRawWindow(), -1, SDL_RENDERER_ACCELERATED);
 
     // Create Vertex Array Object
     GLuint vao = 0;
@@ -132,7 +128,7 @@ int main(int, char*[])
     (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
 
-    ImGui_ImplSDL2_InitForOpenGL(wnd, glc);
+    ImGui_ImplSDL2_InitForOpenGL(window.getRawWindow(), glc);
     ImGui_ImplOpenGL3_Init("#version 100"); // WebGL1 with OpenGLES2
     //ImGui_ImplOpenGL3_Init("#version 300 es"); // WebGL2 with OpenGLES2
 
@@ -154,7 +150,7 @@ int main(int, char*[])
 
         // Updates
         ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplSDL2_NewFrame(wnd);
+        ImGui_ImplSDL2_NewFrame(window.getRawWindow());
         ImGui::NewFrame();
 
         if (show_demo_window)
@@ -167,7 +163,7 @@ int main(int, char*[])
         ImGui::Render();
 
         // Rendering
-        SDL_GL_MakeCurrent(wnd, glc);
+        SDL_GL_MakeCurrent(window.getRawWindow(), glc);
 
         // Clear the screen
         Library::clearColour();
@@ -182,7 +178,7 @@ int main(int, char*[])
         // Draw IMGUI
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        SDL_GL_SwapWindow(wnd);
+        SDL_GL_SwapWindow(window.getRawWindow());
 
         return true;
     };
@@ -200,7 +196,7 @@ int main(int, char*[])
 
 #ifndef __EMSCRIPTEN__
     SDL_GL_DeleteContext(glc);
-    SDL_DestroyWindow(wnd);
+    SDL_DestroyWindow(window.getRawWindow()); //todo: let WindowSDL do it
     SDL_Quit();
 #endif
 

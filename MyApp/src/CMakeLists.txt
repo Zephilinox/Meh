@@ -7,7 +7,7 @@ add_library(myapp_object OBJECT
     "MyApp/Game.cpp"
 )
 
-target_link_libraries(myapp_object PUBLIC mylib::mylib imgui)
+target_link_libraries(myapp_object PUBLIC mylib::mylib imgui commonlib::commonlib)
 target_include_directories(myapp_object PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")

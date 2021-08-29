@@ -2,8 +2,11 @@ include(ConfigureTarget)
 include(CompilerWarnings)
 
 add_library(commonlib
-    "CommonLib/Library.hpp"
-    "CommonLib/Library.cpp"
+    "CommonLib/Window/Window.hpp"
+    "CommonLib/Window/WindowSDL.hpp"
+    "CommonLib/Window/WindowSDL.cpp"
+    "CommonLib/Window/WindowNone.hpp"
+    "CommonLib/Window/WindowNone.cpp"
 )
 add_library(commonlib::commonlib ALIAS commonlib)
 

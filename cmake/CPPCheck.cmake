@@ -27,6 +27,9 @@ function(cppcheck_sources target_name string_that_must_be_in_path sources)
         "--suppress=missingIncludeSystem"
         "--suppress=preprocessorErrorDirective"
         "--suppress=unmatchedSuppression"
+        "--suppress=unusedFunction"
+        "--suppress=passedByValue"
+        "--suppress=syntaxError"
         "--project=compile_commands_filtered.json"
     )
 

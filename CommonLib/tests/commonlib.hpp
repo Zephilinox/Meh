@@ -1,5 +1,5 @@
 //SELF
-#include "CommonLib/Library.hpp"
+#include "CommonLib/Window/WindowNone.hpp"
 
 //LIBS
 #include <doctest/doctest.h>
@@ -8,6 +8,8 @@
 
 TEST_CASE("test")
 {
-    Library lib;
-    CHECK(lib.doThing());
+    meh::common::WindowNone window({});
+    REQUIRE(window.isOpen());
+    window.close();
+    REQUIRE(!window.isOpen());
 }
