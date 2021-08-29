@@ -1,5 +1,7 @@
 include(ConfigureTarget)
 include(CompilerWarnings)
+include(FetchAsio)
+include(FetchGLM)
 
 add_library(commonlib
     "CommonLib/Window/Window.hpp"
@@ -25,6 +27,8 @@ else()
         target_link_libraries(commonlib PUBLIC "m" "atomic" "pthread")
     endif ()
 endif()
+
+target_link_libraries(commonlib PUBLIC glm asio)
 
 configure_target(commonlib "${COMMONLIB_CODE_COVERAGE}")
 set_target_warnings(commonlib "${COMMONLIB_WARNINGS_AS_ERRORS}")
