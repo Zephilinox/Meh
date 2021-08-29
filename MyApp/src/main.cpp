@@ -25,6 +25,7 @@
 #include <imgui.h>
 #include <backends/imgui_impl_sdl.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <spdlog/spdlog.h>
 
 //STD
 #include <exception>
@@ -79,8 +80,7 @@ int main(int, char*[])
         return 1;
     }
 
-    std::cout << "OpenGLES version loaded: " << GLVersion.major << "."
-              << GLVersion.minor << std::endl;
+    spdlog::info("OpenGLES version loaded: {}.{}\n", GLVersion.major, GLVersion.minor);
 #endif
 
     [[maybe_unused]] auto* rdr = SDL_CreateRenderer(window.getRawWindow(), -1, SDL_RENDERER_ACCELERATED);

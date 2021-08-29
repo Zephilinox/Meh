@@ -1,3 +1,7 @@
+if (TARGET doctest)
+    return()
+endif()
+
 include(SetSystemIncludes)
 
 if (NOT CPM_SOURCE_CACHE)
