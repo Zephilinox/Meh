@@ -1,7 +1,6 @@
 name: CommonLib
 
 on:
-  push:
   pull_request:
   release:
   

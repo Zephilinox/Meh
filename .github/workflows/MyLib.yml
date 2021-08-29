@@ -1,7 +1,6 @@
 name: MyLib
 
 on:
-  push:
   pull_request:
   release:
   

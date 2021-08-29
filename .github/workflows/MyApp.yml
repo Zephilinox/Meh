@@ -1,7 +1,6 @@
 name: MyApp
 
 on:
-  push:
   pull_request:
   release:
   
