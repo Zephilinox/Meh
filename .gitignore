@@ -335,3 +335,9 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+#Clion config stuff
+.idea/
+
+#ignore Cheungs build configs
+Builds/
