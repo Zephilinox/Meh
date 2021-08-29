@@ -25,6 +25,7 @@ set_property(TARGET benchmark PROPERTY CXX_EXTENSIONS OFF)
 
 set_target_properties(benchmark PROPERTIES FOLDER dependencies)
 set_target_includes_as_system(benchmark)
+set_target_warnings_disabled(benchmark)
 
 get_target_property(benchmark_SOURCES benchmark SOURCES)
 source_group(TREE ${benchmark_SOURCE_DIR} FILES ${benchmark_SOURCES})
