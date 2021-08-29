@@ -3,7 +3,11 @@ name: MyApp
 on:
   pull_request:
   release:
-  
+
+concurrency:
+  group: myapp-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: ${{ matrix.config.name }}
@@ -73,7 +77,7 @@ jobs:
             clang_format: "OFF",
           }
         - {
-            name: "ubuntu-gcc-asan",
+            name: "ubuntu-gcc-ubalsan",
             os: ubuntu-latest,
             build_type: "Debug",
             cc: "gcc",
@@ -81,24 +85,9 @@ jobs:
             generators: "Ninja",
             ccache: "ON",
             asan: "ON",
-            lsan: "OFF",
-            tsan: "OFF",
-            ubsan: "OFF",
-            code_coverage: "OFF",
-            clang_format: "OFF",
-          }
-        - {
-            name: "ubuntu-gcc-lsan",
-            os: ubuntu-latest,
-            build_type: "Debug",
-            cc: "gcc",
-            cxx: "g++",
-            generators: "Ninja",
-            ccache: "ON",
-            asan: "OFF",
             lsan: "ON",
             tsan: "OFF",
-            ubsan: "OFF",
+            ubsan: "ON",
             code_coverage: "OFF",
             clang_format: "OFF",
           }
@@ -114,21 +103,6 @@ jobs:
             lsan: "OFF",
             tsan: "ON",
             ubsan: "OFF",
-            code_coverage: "OFF",
-            clang_format: "OFF",
-          }
-        - {
-            name: "ubuntu-gcc-ubsan",
-            os: ubuntu-latest,
-            build_type: "Debug",
-            cc: "gcc",
-            cxx: "g++",
-            generators: "Ninja",
-            ccache: "ON",
-            asan: "OFF",
-            lsan: "OFF",
-            tsan: "OFF",
-            ubsan: "ON",
             code_coverage: "OFF",
             clang_format: "OFF",
           }
@@ -178,7 +152,7 @@ jobs:
         if: startsWith(matrix.config.ccache, 'ON')
         uses: hendrikmuhs/ccache-action@v1
         with:
-          key: ${{ matrix.os }}-${{ matrix.build_type }}
+          key: ${{ matrix.config.os }}-${{ matrix.build_type }}
           max-size: 500M
 
       - name: CPM Cache
@@ -186,9 +160,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: $GITHUB_WORKSPACE/.cpmcache
-          key: ${{ matrix.os }}-cpm-${{ hashFiles('**/') }}
+          key: ${{ matrix.config.os }}-cpm-${{ hashFiles('**/') }}
           restore-keys: |
-            ${{ matrix.os }}-cpm-
+            ${{ matrix.config.os }}-cpm-
 
       - name: Add clang path to $PATH env on Windows
         shell: bash
@@ -408,123 +382,3 @@ jobs:
           asset_path: ./${{ matrix.config.name }}.7z
           asset_name: ${{ matrix.config.name }}.7z.zip
           asset_content_type: application/zip
-
-  clang-format:
-    name: clang-format
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install dependencies on ubuntu
-        run: |
-          sudo apt-get update --fix-missing
-          sudo apt-get install ninja-build
-          sudo apt-get install clang-format
-          sudo apt-get install libgles2-mesa-dev
-          ninja --version
-          cmake --version
-          gcc --version
-          clang --version
-          clang-format --version
-
-      - name: Configure
-        shell: bash
-        run: |
-          export CC=clang
-          export CXX=clang++
-          cmake \
-            -S MyApp \
-            -B MyApp/build \
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DMYAPP_CI=ON \
-            -DMYAPP_CLANG_FORMAT_CHECK=ON \
-            -G "Ninja"
-
-      - name: Check
-        shell: bash
-        run: | 
-          export CC=clang
-          export CXX=clang++
-          cmake --build MyApp/build --target myapp_clang_format_check
-
-  clang-tidy:
-    name: clang-tidy
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install dependencies on ubuntu
-        run: |
-          sudo apt-get update --fix-missing
-          sudo apt-get install ninja-build
-          sudo apt-get install clang-tidy
-          sudo apt-get install libgles2-mesa-dev
-          ninja --version
-          cmake --version
-          gcc --version
-          clang --version
-          clang-tidy --version
-
-      - name: Configure
-        shell: bash
-        run: |
-          export CC=clang
-          export CXX=clang++
-          cmake \
-            -S MyApp \
-            -B MyApp/build \
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DMYAPP_CI=ON \
-            -DMYAPP_CLANG_TIDY_CHECK=ON \
-            -G "Ninja"
-
-      - name: Check
-        shell: bash
-        run: | 
-          export CC=clang
-          export CXX=clang++
-          cmake --build MyApp/build --target myapp_clang_tidy_check
-
-  cppcheck:
-    name: cppcheck
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install dependencies on ubuntu
-        run: |
-          sudo apt-get update --fix-missing
-          sudo apt-get install ninja-build
-          sudo apt-get install cppcheck
-          sudo apt-get install libgles2-mesa-dev
-          ninja --version
-          cmake --version
-          gcc --version
-          clang --version
-          cppcheck --version
-
-      - name: Configure
-        shell: bash
-        run: |
-          export CC=clang
-          export CXX=clang++
-          cmake \
-            -S MyApp \
-            -B MyApp/build \
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DMYAPP_CI=ON \
-            -DMYAPP_CPPCHECK=ON \
-            -G "Ninja"
-
-      - name: Check
-        shell: bash
-        run: | 
-          export CC=clang
-          export CXX=clang++
-          cmake --build MyApp/build --target myapp_cppcheck
