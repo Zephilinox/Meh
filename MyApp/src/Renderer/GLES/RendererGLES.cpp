@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+#include <spdlog/spdlog.h>
 #include "CommonLib/Window/Window.hpp"
 
 #include "Renderer/GLES/RendererGLES.hpp"
@@ -44,4 +45,13 @@ void meh::renderer::RendererGLES::present()
     // TODO - Process the renderables and draw them to
     // the screen here.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (!primaryCamera) {
+        spdlog::error("RendererGLES: PrimaryCamera is not set. Screen will be blank.");
+        return;
+    }
+
+    glm::mat4 lookat = primaryCamera->getLookAt();
+    glm::mat4 persp = primaryCamera->getPerspective();
+
+    // Here we need to bind these to the shaders we will use.
 }
