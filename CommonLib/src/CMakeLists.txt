@@ -1,5 +1,7 @@
 include(ConfigureTarget)
 include(CompilerWarnings)
+include(FetchASIO)
+include(FetchGLM)
 include(FetchFMT)
 include(FetchSPDLOG)
 
@@ -29,6 +31,8 @@ else()
         target_link_libraries(commonlib PUBLIC "m" "atomic" "pthread")
     endif ()
 endif()
+
+target_link_libraries(commonlib PUBLIC glm asio)
 
 configure_target(commonlib "${COMMONLIB_CODE_COVERAGE}")
 set_target_warnings(commonlib "${COMMONLIB_WARNINGS_AS_ERRORS}")
