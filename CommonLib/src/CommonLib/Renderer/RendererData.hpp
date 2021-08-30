@@ -11,7 +11,7 @@ enum RendererType
 };
 
 // RenderContext settings. (Sent to window for setup)
-// TODO - Do we need flags for antialiasing and 
+// TODO - Do we need flags for antialiasing and debugging.
 struct RenderContext
 {
     RendererType type;

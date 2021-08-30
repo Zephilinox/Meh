@@ -24,7 +24,9 @@ set_target_warnings(myapp_object "${MYAPP_WARNINGS_AS_ERRORS}")
 add_executable(myapp "main.cpp"
                       "Renderer/RendererBase.hpp"
                       "Renderer/GLES/RendererGLES.hpp"
-                      "Renderer/GLES/RendererGLES.cpp")
+                      "Renderer/GLES/RendererGLES.cpp"
+                      "Camera/Camera.hpp"
+                      "Camera/Camera.cpp")
 add_executable(myapp::myapp ALIAS myapp)
 target_link_libraries(myapp PUBLIC myapp_object)
 

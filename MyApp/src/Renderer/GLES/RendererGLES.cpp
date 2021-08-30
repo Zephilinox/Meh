@@ -19,6 +19,7 @@ bool meh::renderer::RendererGLES::init(meh::common::Window& win)
 
     // Setup base pipeline settings.
     updateResolution(win.getWidth(), win.getHeight());
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     return result;
 }
@@ -33,12 +34,14 @@ void meh::renderer::RendererGLES::draw()
 
 }
 
-void meh::renderer::RendererGLES::setCamera()
+void meh::renderer::RendererGLES::setCamera(meh::scene::Camera& camera)
 {
-
+    primaryCamera = &camera;
 }
 
 void meh::renderer::RendererGLES::present()
 {
-
+    // TODO - Process the renderables and draw them to
+    // the screen here.
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
