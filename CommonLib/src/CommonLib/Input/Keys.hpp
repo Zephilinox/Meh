@@ -10,7 +10,7 @@
 namespace meh::common
 {
 
-enum class Key
+enum class Key : int
 {
     Unknown = -1,
 
@@ -133,7 +133,7 @@ enum class Key
 Key keyFromString(const std::string& str);
 const char* keyToString(Key key);
 
-enum class Button
+enum class Button : int
 {
     Unknown = -1,
     Left,
@@ -142,7 +142,7 @@ enum class Button
     Button4,
     Button5,
 
-    KeyCount,
+    ButtonCount,
 };
 
 Button buttonFromString(const std::string& str);
