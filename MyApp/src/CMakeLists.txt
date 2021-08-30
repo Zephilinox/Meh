@@ -26,7 +26,8 @@ add_executable(myapp "main.cpp"
                       "Renderer/GLES/RendererGLES.hpp"
                       "Renderer/GLES/RendererGLES.cpp"
                       "Camera/Camera.hpp"
-                      "Camera/Camera.cpp")
+                      "Camera/Camera.cpp"
+                      "Renderables/RenderableBase.hpp")
 add_executable(myapp::myapp ALIAS myapp)
 target_link_libraries(myapp PUBLIC myapp_object)
 

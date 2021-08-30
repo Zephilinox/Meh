@@ -12,5 +12,6 @@
 #include <atomic>
 #include <thread>
 #include <type_traits>
+#include <cstdint>
 
 #include <glm/glm.hpp>
