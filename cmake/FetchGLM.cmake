@@ -1,4 +1,5 @@
 include(SetSystemIncludes)
+include(CompilerWarnings)
 
 CPMAddPackage(
     NAME glm
@@ -7,4 +8,3 @@ CPMAddPackage(
 )
 
 set_target_includes_as_system(glm)
-set_target_warnings_disabled(glm)
