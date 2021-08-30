@@ -30,6 +30,7 @@ public:
     [[nodiscard]] virtual unsigned int getWidth() const final;
     [[nodiscard]] virtual unsigned int getHeight() const final;
 
+    virtual void init() final;
     virtual void close() final;
     virtual void clear(int r, int g, int b) final;
     virtual void display() final;
@@ -37,6 +38,8 @@ public:
     virtual void setVerticalSyncEnabled(bool enabled) final;
     virtual void setWidth(unsigned int width) final;
     virtual void setHeight(unsigned int height) final;
+
+    virtual bool setupRenderingContext(const meh::renderer::RenderContext& rc) final;
 
     static constexpr std::int32_t type_v = 1;
 

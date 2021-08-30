@@ -51,6 +51,10 @@ bool WindowNone::isVerticalSyncEnabled() const
     return settings.vsync;
 }
 
+void WindowNone::init()
+{
+}
+
 void WindowNone::close()
 {
     is_open = false;
@@ -77,4 +81,9 @@ void WindowNone::setWidth(unsigned int width)
 void WindowNone::setHeight(unsigned int height)
 {
     settings.height = height;
+}
+
+bool WindowNone::setupRenderingContext(const meh::renderer::RenderContext& rc)
+{
+    return true;
 }
