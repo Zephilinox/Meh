@@ -11,6 +11,7 @@ add_library(commonlib
     "CommonLib/Window/WindowSDL.cpp"
     "CommonLib/Window/WindowNone.hpp"
     "CommonLib/Window/WindowNone.cpp"
+    "CommonLib/Renderer/RendererData.hpp"
 )
 add_library(commonlib::commonlib ALIAS commonlib)
 

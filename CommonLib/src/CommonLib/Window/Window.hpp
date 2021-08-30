@@ -7,6 +7,8 @@
 //STD
 #include <string>
 
+#include "CommonLib/Renderer/RendererData.hpp"
+
 namespace meh::common
 {
 
@@ -40,6 +42,7 @@ public:
     [[nodiscard]] virtual unsigned int getWidth() const = 0;
     [[nodiscard]] virtual unsigned int getHeight() const = 0;
 
+    virtual void init() = 0;
     virtual void close() = 0;
     virtual void clear(int r, int g, int b) = 0;
     virtual void display() = 0;
@@ -47,6 +50,8 @@ public:
     virtual void setVerticalSyncEnabled(bool enabled) = 0;
     virtual void setWidth(unsigned int width) = 0;
     virtual void setHeight(unsigned int height) = 0;
+
+    virtual bool setupRenderingContext(const meh::renderer::RenderContext& rc) = 0;
 
     [[nodiscard]] std::int32_t getType() const { return type; }
 
