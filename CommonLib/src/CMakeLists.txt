@@ -4,6 +4,7 @@ include(FetchASIO)
 include(FetchGLM)
 include(FetchFMT)
 include(FetchSPDLOG)
+include(FetchMagicEnum)
 
 add_library(commonlib
     "CommonLib/Window/Window.hpp"
@@ -11,12 +12,17 @@ add_library(commonlib
     "CommonLib/Window/WindowSDL.cpp"
     "CommonLib/Window/WindowNone.hpp"
     "CommonLib/Window/WindowNone.cpp"
+
+    "CommonLib/Input/Events.hpp"
+    "CommonLib/Input/Keys.hpp"
+    "CommonLib/Input/Keys.cpp"
+    "CommonLib/Input/KeysSDL.hpp"
 )
 add_library(commonlib::commonlib ALIAS commonlib)
 
 target_include_directories(commonlib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
-target_link_libraries(commonlib PUBLIC fmt::fmt spdlog::spdlog)
+target_link_libraries(commonlib PUBLIC fmt::fmt spdlog::spdlog magic_enum::magic_enum)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     target_link_options(commonlib PUBLIC "-sUSE_SDL=2" "-sUSE_FREETYPE=1")
