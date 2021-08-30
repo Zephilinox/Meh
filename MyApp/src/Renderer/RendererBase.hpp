@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CommonLib/Renderer/RendererData.hpp"
+#include "Camera/Camera.hpp"
 
 namespace meh::common
 {
@@ -23,7 +24,7 @@ public:
 
     // RenderState Configuration.
     virtual void draw() = 0;
-    virtual void setCamera() = 0;
+    virtual void setCamera(meh::scene::Camera& camera) = 0;
 
     // Update Screen. (This should only be avaliable to the core of the system.)
     virtual void present() = 0;

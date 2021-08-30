@@ -17,12 +17,13 @@ public:
 
     // RenderState Configuration.
     void draw() override;
-    void setCamera() override;
+    void setCamera(meh::scene::Camera& camera) override;
 
     // Update Screen. (This should only be avaliable to the core of the system.)
     void present() override;
 
 private:
+    meh::scene::Camera* primaryCamera = nullptr;
 };
 
 }
