@@ -3,6 +3,7 @@ if (TARGET glm)
 endif()
 
 include(SetSystemIncludes)
+include(CompilerWarnings)
 
 if (NOT CPM_SOURCE_CACHE)
     set(CPM_SOURCE_CACHE "${PROJECT_SOURCE_DIR}/../.cpmcache/")
@@ -15,4 +16,3 @@ CPMAddPackage(
 )
 
 set_target_includes_as_system(glm)
-set_target_warnings_disabled(glm)
