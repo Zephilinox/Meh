@@ -1,4 +1,12 @@
+if (TARGET glm)
+    return()
+endif()
+
 include(SetSystemIncludes)
+
+if (NOT CPM_SOURCE_CACHE)
+    set(CPM_SOURCE_CACHE "${PROJECT_SOURCE_DIR}/../.cpmcache/")
+endif()
 
 CPMAddPackage(
     NAME glm

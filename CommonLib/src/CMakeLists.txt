@@ -13,6 +13,8 @@ add_library(commonlib
     "CommonLib/Window/WindowNone.hpp"
     "CommonLib/Window/WindowNone.cpp"
 
+    "CommonLib/Input/Input.hpp"
+    "CommonLib/Input/Input.cpp"
     "CommonLib/Input/Events.hpp"
     "CommonLib/Input/Keys.hpp"
     "CommonLib/Input/Keys.cpp"

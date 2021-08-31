@@ -21,6 +21,7 @@
 
 #include <MyLib/Library.hpp>
 #include <CommonLib/Window/WindowSDL.hpp>
+#include <CommonLib/Input/Input.hpp>
 
 #include <imgui.h>
 #include <backends/imgui_impl_sdl.h>
@@ -137,28 +138,47 @@ int main(int, char*[])
 
     bool show_demo_window = true;
 
+    meh::common::Input input;
+
     loop = [&] {
         // Events
         meh::common::Event event;
+        input.prepare();
         while (window.poll(event))
         {
             auto visitor = meh::common::overload{
-                [](meh::common::EventKey e) {
-                    spdlog::info("Key {} was {}", meh::common::keyToString(e.key), e.down ? "pressed" : "released");
+                [](meh::common::EventKey) {
+                    //spdlog::info("Key {} was {}", meh::common::keyToString(e.key), e.down ? "pressed" : "released");
                 },
-                [](meh::common::EventMouseButton e) {
-                    spdlog::info("Button {} was {}", meh::common::buttonToString(e.button), e.down ? "pressed" : "released");
+                [](meh::common::EventMouseButton) {
+                    //spdlog::info("Button {} was {}", meh::common::buttonToString(e.button), e.down ? "pressed" : "released");
                 },
-                [](meh::common::EventMouseMove e) {
-                    spdlog::info("Mouse moved to {},{}", e.x, e.y);
+                [](meh::common::EventMouseMove) {
+                    //spdlog::info("Mouse moved to {},{}", e.x, e.y);
                 },
                 [](auto&&) {
                     //unknown
                 }
             };
 
+            input.process(event);
             std::visit(visitor, event);
         }
+
+        if (input.isKeyPressed(meh::common::Key::F1))
+            spdlog::info("F1 Pressed");
+
+        if (input.isKeyPressed(meh::common::Key::W))
+            spdlog::info("W Pressed");
+
+        if (input.isKeyDown(meh::common::Key::W))
+            spdlog::info("W Held");
+
+        if (input.isKeyReleased(meh::common::Key::W))
+            spdlog::info("W Released");
+
+        if (input.isMouseButtonReleased(meh::common::Button::Left))
+            spdlog::info("MB1 Released");
 
         // Updates
         ImGui_ImplOpenGL3_NewFrame();

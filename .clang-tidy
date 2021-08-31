@@ -23,6 +23,7 @@ Checks: '
     -cppcoreguidelines-owning-memory,
     -cppcoreguidelines-no-malloc,
     -cppcoreguidelines-pro-type-union-access,
+    -cppcoreguidelines-pro-bounds-constant-array-index,
 '
 
 WarningsAsErrors: '*'
