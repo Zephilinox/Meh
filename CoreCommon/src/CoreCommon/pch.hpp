@@ -3,7 +3,7 @@
 // CMake bug https://gitlab.kitware.com/cmake/cmake/-/issues/21219
 // MSVC will emit warnings for the PCH, so force warning level to 1 to help hide them
 #if defined(_MSC_VER)
-    #define _WIN32_WINNT = 0x0601
+    #define _WIN32_WINNT 0x0601
     #pragma warning(push, 1)
     #pragma warning(disable : 4619)
 #endif
