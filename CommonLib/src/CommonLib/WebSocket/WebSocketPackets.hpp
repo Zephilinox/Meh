@@ -1,6 +1,7 @@
 #pragma once
 
-namespace meh::common::network {
+namespace meh::common::network
+{
 enum class MsgClientServer
 {
     ClientServerBinaryBegin = 64,
@@ -30,7 +31,7 @@ struct Packet
 {
     PacketHeader<T> header;
     std::vector<uint8_t> body;
-    
+
     size_t getSize() const
     {
         return sizeof(message_header<T>) + body.size();
