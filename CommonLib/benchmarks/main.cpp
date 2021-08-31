@@ -1,7 +1,10 @@
 //SELF
+#include "Signal.bench.hpp"
 
 //LIBS
 #include <benchmark/benchmark.h>
+
+//STD
 
 auto main(int argc, char** argv) -> int
 {
