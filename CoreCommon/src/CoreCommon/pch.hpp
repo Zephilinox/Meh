@@ -19,6 +19,7 @@
 //Asio things
 #define ASIO_STANDALONE
 #if defined(_MSC_VER)
+    #define _WIN32_WINNT=0x0601
     #pragma warning(push)
     #pragma warning(disable : 4619)
 #endif
