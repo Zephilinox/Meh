@@ -18,6 +18,13 @@
 
 //Asio things
 #define ASIO_STANDALONE
+#if defined(_MSC_VER)
+    #pragma warning (push)
+    #pragma warning (disable:4619)
+#endif
 #include <asio.hpp>
 #include <asio/ts/buffer.hpp>
 #include <asio/ts/internet.hpp>
+#if defined(_MSC_VER)
+    #pragma warning (pop)
+#endif
