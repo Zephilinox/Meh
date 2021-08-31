@@ -7,6 +7,7 @@
 
 //STD
 #include <string>
+#include <queue>
 
 struct SDL_Window;
 
@@ -23,7 +24,9 @@ public:
     WindowSDL& operator=(const WindowSDL&) noexcept = delete;
     ~WindowSDL() noexcept final;
 
-    //virtual bool poll(Event& e) final;
+    virtual bool poll(Event& event) final;
+    virtual void send(Event event) final;
+
     [[nodiscard]] virtual bool isOpen() const final;
     [[nodiscard]] virtual bool isVerticalSyncEnabled() const final;
 
@@ -45,6 +48,7 @@ public:
 private:
     bool is_open = true;
     SDL_Window* raw_window;
+    std::queue<Event> sent_events;
 };
 
 } // namespace meh::common

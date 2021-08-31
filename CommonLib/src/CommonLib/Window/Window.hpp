@@ -1,6 +1,7 @@
 #pragma once
 
 //SELF
+#include "CommonLib/Input/Events.hpp"
 
 //LIBS
 
@@ -33,7 +34,9 @@ public:
     Window& operator=(const Window&) noexcept = delete;
     virtual ~Window() noexcept = default;
 
-    //virtual bool poll(Event& e) = 0;
+    virtual bool poll(Event& event) = 0;
+    virtual void send(Event event) = 0;
+
     [[nodiscard]] virtual bool isOpen() const = 0;
     [[nodiscard]] virtual bool isVerticalSyncEnabled() const = 0;
 
@@ -51,7 +54,7 @@ public:
     [[nodiscard]] std::int32_t getType() const { return type; }
 
     template <typename T>
-    [[nodiscard]] bool is()
+    [[nodiscard]] bool is() const
     {
         static_assert(std::is_base_of_v<Window, T>, "This type is not derived from meh::common::Window");
         return T::type_v == type;

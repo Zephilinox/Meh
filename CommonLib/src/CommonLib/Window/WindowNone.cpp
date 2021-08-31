@@ -23,6 +23,24 @@ unsigned int WindowNone::getHeight() const
     return settings.height;
 }
 
+bool WindowNone::poll(Event& event)
+{
+    if (sent_events.empty())
+    {
+        event = EventNone{};
+        return false;
+    }
+
+    event = std::move(sent_events.front());
+    sent_events.pop();
+    return true;
+}
+
+void WindowNone::send(Event event)
+{
+    sent_events.push(std::move(event));
+}
+
 bool WindowNone::isOpen() const
 {
     return is_open;

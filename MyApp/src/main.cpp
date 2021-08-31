@@ -139,13 +139,25 @@ int main(int, char*[])
 
     loop = [&] {
         // Events
-        SDL_Event e;
-        while (SDL_PollEvent(&e) != 0)
+        meh::common::Event event;
+        while (window.poll(event))
         {
-            if (e.type == SDL_QUIT)
-                return false;
+            auto visitor = meh::common::overload{
+                [](meh::common::EventKey e) {
+                    spdlog::info("Key {} was {}", meh::common::keyToString(e.key), e.down ? "pressed" : "released");
+                },
+                [](meh::common::EventMouseButton e) {
+                    spdlog::info("Button {} was {}", meh::common::buttonToString(e.button), e.down ? "pressed" : "released");
+                },
+                [](meh::common::EventMouseMove e) {
+                    spdlog::info("Mouse moved to {},{}", e.x, e.y);
+                },
+                [](auto&&) {
+                    //unknown
+                }
+            };
 
-            ImGui_ImplSDL2_ProcessEvent(&e);
+            std::visit(visitor, event);
         }
 
         // Updates

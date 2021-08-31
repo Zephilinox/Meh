@@ -19,7 +19,10 @@ Checks: '
     -readability-named-parameter,
     -cppcoreguidelines-avoid-magic-numbers,
     -modernize-use-trailing-return-type,
-    -cppcoreguidelines-pro-type-vararg, # Used extensively by C libraries
+    -cppcoreguidelines-pro-type-vararg,
+    -cppcoreguidelines-owning-memory,
+    -cppcoreguidelines-no-malloc,
+    -cppcoreguidelines-pro-type-union-access,
 '
 
 WarningsAsErrors: '*'

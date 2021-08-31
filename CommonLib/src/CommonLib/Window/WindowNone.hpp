@@ -7,6 +7,7 @@
 
 //STD
 #include <string>
+#include <queue>
 
 namespace meh::common
 {
@@ -20,7 +21,9 @@ public:
     WindowNone& operator=(WindowNone&&) noexcept = delete;
     WindowNone& operator=(const WindowNone&) noexcept = delete;
 
-    //virtual bool poll(Event& e) final;
+    virtual bool poll(Event& event) final;
+    virtual void send(Event event) final;
+
     [[nodiscard]] virtual bool isOpen() const final;
     [[nodiscard]] virtual bool isVerticalSyncEnabled() const final;
 
@@ -39,6 +42,7 @@ public:
 
 private:
     bool is_open = true;
+    std::queue<Event> sent_events;
 };
 
 } // namespace meh::common
