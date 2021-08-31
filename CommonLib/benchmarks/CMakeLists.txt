@@ -3,6 +3,7 @@ include(ConfigureTarget)
 include(CompilerWarnings)
 
 add_executable(commonlib_benchmarks "main.cpp"
+    "Signal.bench.hpp"
 )
 
 configure_target(commonlib_benchmarks "${COMMONLIB_CODE_COVERAGE}")

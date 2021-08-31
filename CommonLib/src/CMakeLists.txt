@@ -19,6 +19,12 @@ add_library(commonlib
     "CommonLib/Input/Keys.hpp"
     "CommonLib/Input/Keys.cpp"
     "CommonLib/Input/KeysSDL.hpp"
+
+    "CommonLib/Signal/Connection.hpp"
+    "CommonLib/Signal/Connection.cpp"
+    "CommonLib/Signal/Disconnector.hpp"
+    "CommonLib/Signal/Signal.hpp"
+    "CommonLib/Signal/Slot.hpp"
 )
 add_library(commonlib::commonlib ALIAS commonlib)
 
