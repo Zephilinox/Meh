@@ -68,6 +68,7 @@ jobs:
         run: |
           sudo apt-get update --fix-missing
           sudo apt-get install ninja-build
+          sudo apt-get install clang
           sudo apt-get install clang-format
           sudo apt-get install clang-tidy
           sudo apt-get install cppcheck
