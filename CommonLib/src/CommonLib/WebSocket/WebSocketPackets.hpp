@@ -4,7 +4,7 @@ namespace meh::common::network {
 enum class MsgClientServer
 {
     ClientServerBinaryBegin = 64,
-    Ping = ClientServerBinaryBegin
+    Ping = ClientServerBinaryBegin,
     Connect,
     Disconnect,
     Input
@@ -20,7 +20,7 @@ enum class MsgServerClient
 template <typename T>
 struct PacketHeader
 {
-    T id {};
+    T id{};
     uint32_t size = 0;
     long long timestamp;
 };
@@ -36,5 +36,4 @@ struct Packet
         return sizeof(message_header<T>) + body.size();
     }
 };
-
 }
