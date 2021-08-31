@@ -1,5 +1,13 @@
 #pragma once
 
+// CMake bug https://gitlab.kitware.com/cmake/cmake/-/issues/21219
+// MSVC will emit warnings for the PCH, so force warning level to 1 to help hide them
+#if defined(_MSC_VER)
+    #define _WIN32_WINNT=0x0601
+    #pragma warning(push, 1)
+    #pragma warning(disable : 4619)
+#endif
+
 //Std Library stuff
 #include <string>
 #include <vector>
@@ -18,14 +26,10 @@
 
 //Asio things
 #define ASIO_STANDALONE
-#if defined(_MSC_VER)
-    #define _WIN32_WINNT=0x0601
-    #pragma warning(push)
-    #pragma warning(disable : 4619)
-#endif
 #include <asio.hpp>
 #include <asio/ts/buffer.hpp>
 #include <asio/ts/internet.hpp>
+
 #if defined(_MSC_VER)
     #pragma warning(pop)
 #endif
