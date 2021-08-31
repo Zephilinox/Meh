@@ -37,4 +37,4 @@ struct Packet
         return sizeof(message_header<T>) + body.size();
     }
 };
-}
+} // namespace meh::common::network
