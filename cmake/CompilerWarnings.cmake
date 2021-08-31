@@ -25,6 +25,7 @@ function(set_target_warnings target_name warnings_as_errors)
         /w14906 # string literal cast to 'LPWSTR'
         /w14928 # illegal copy-initialization; more than one user-defined conversion has been implicitly applied
         /permissive- # standards conformance mode for MSVC compiler.
+        /wd4619 # Disable warning about pragma disables for unknown warnings, as ASIO suffers from this issue
     )
 
     set(CLANG_WARNINGS
