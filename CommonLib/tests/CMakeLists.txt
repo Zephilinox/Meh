@@ -5,6 +5,7 @@ include(CompilerWarnings)
 add_executable(commonlib_tests
     "main.cpp"
     "commonlib.hpp"
+    "Signal.test.hpp"
 )
 
 configure_target(commonlib_tests ${COMMONLIB_CODE_COVERAGE})

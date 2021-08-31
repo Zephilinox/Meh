@@ -1,5 +1,6 @@
 //SELF
 #include "commonlib.hpp"
+#include "Signal.test.hpp"
 
 //LIBS
 #define DOCTEST_CONFIG_IMPLEMENT
