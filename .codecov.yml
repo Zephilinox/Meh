@@ -22,11 +22,27 @@ comment:
   require_changes: no
 
 flags:
-  MyLib:
+  CoreClient:
     paths:
-      - MyLib
+      - CoreClient
     carryforward: true
-  MyApp:
+  CoreCommon:
     paths:
-      - MyApp
+      - CoreCommon
+    carryforward: true
+  CoreServer:
+    paths:
+      - CoreServer
+    carryforward: true
+  MehClient:
+    paths:
+      - MehClient
+    carryforward: true
+  MehCommon:
+    paths:
+      - MehCommon
+    carryforward: true
+  MehServer:
+    paths:
+      - MehServer
     carryforward: true

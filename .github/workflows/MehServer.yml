@@ -1,0 +1,387 @@
+name: MehServer
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+  release:
+
+concurrency:
+  group: meh_server-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+#        - {
+#            name: "ubuntu-emscripten",
+#            os: ubuntu-latest,
+#            build_type: "Release",
+#            cc: "emcc",
+#            cxx: "em++",
+#            generators: "Ninja",
+#            ccache: "OFF",
+#            code_coverage: "OFF",
+#            clang_format: "OFF",
+#          }
+        - {
+            name: "ubuntu-clang",
+            os: ubuntu-latest,
+            build_type: "Release",
+            cc: "clang",
+            cxx: "clang++",
+            generators: "Ninja",
+            ccache: "ON",
+            code_coverage: "OFF",
+            clang_format: "OFF",
+          }
+        - {
+            name: "ubuntu-clang-valgrind",
+            os: ubuntu-latest,
+            build_type: "Debug",
+            cc: "clang",
+            cxx: "clang++",
+            generators: "Ninja",
+            ccache: "ON",
+            code_coverage: "OFF",
+            valgrind: "ON",
+            clang_format: "OFF",
+          }
+        - {
+            name: "ubuntu-gcc",
+            os: ubuntu-latest,
+            build_type: "Release",
+            cc: "gcc",
+            cxx: "g++",
+            generators: "Ninja",
+            ccache: "ON",
+            code_coverage: "OFF",
+            clang_format: "OFF",
+          }
+        - {
+            name: "ubuntu-gcc-codecoverage",
+            os: ubuntu-latest,
+            build_type: "Debug",
+            cc: "gcc",
+            cxx: "g++",
+            generators: "Ninja",
+            ccache: "ON",
+            asan: "OFF",
+            lsan: "OFF",
+            tsan: "OFF",
+            ubsan: "OFF",
+            code_coverage: "ON",
+            clang_format: "OFF",
+          }
+        - {
+            name: "ubuntu-gcc-ubalsan",
+            os: ubuntu-latest,
+            build_type: "Debug",
+            cc: "gcc",
+            cxx: "g++",
+            generators: "Ninja",
+            ccache: "ON",
+            asan: "ON",
+            lsan: "ON",
+            tsan: "OFF",
+            ubsan: "ON",
+            code_coverage: "OFF",
+            clang_format: "OFF",
+          }
+        - {
+            name: "ubuntu-gcc-tsan",
+            os: ubuntu-latest,
+            build_type: "Debug",
+            cc: "gcc",
+            cxx: "g++",
+            generators: "Ninja",
+            ccache: "ON",
+            asan: "OFF",
+            lsan: "OFF",
+            tsan: "ON",
+            ubsan: "OFF",
+            code_coverage: "OFF",
+            clang_format: "OFF",
+          }
+        - {
+            name: "windows-msvc-vs2019",
+            os: windows-latest,
+            build_type: "Release",
+            cc: "cl",
+            cxx: "cl",
+            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            generators: "Visual Studio 16 2019",
+            ccache: "OFF",
+            code_coverage: "OFF",
+            clang_format: "OFF",
+          }
+        - {
+            name: "windows-clang-ninja",
+            os: windows-latest,
+            build_type: "Release",
+            cc: "clang",
+            cxx: "clang",
+            generators: "Ninja",
+            ccache: "OFF",
+            code_coverage: "OFF",
+            clang_format: "OFF",
+          }
+        - {
+            name: "macos-clang",
+            os: macos-latest,
+            build_type: "Release",
+            cc: "clang",
+            cxx: "clang++",
+            generators: "Ninja",
+            ccache: "ON",
+            code_coverage: "OFF",
+            clang_format: "OFF",
+          }
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Print env
+        run: |
+          echo github.event.action: ${{ github.event.action }}
+          echo github.event_name: ${{ github.event_name }}
+
+      - name: ccache
+        if: startsWith(matrix.config.ccache, 'ON')
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: ${{ matrix.config.os }}-${{ matrix.build_type }}
+          max-size: 500M
+
+      - name: CPM Cache
+        id: cache-cpm
+        uses: actions/cache@v2
+        with:
+          path: $GITHUB_WORKSPACE/.cpmcache
+          key: ${{ matrix.config.os }}-cpm-${{ hashFiles('**/') }}
+          restore-keys: |
+            ${{ matrix.config.os }}-cpm-
+
+      - name: Add clang path to $PATH env on Windows
+        shell: bash
+        if: matrix.config.name == 'windows-clang-ninja'
+        run: |
+          echo "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\Llvm\x64\bin" >> $GITHUB_PATH
+
+      - uses: seanmiddleditch/gha-setup-ninja@master
+        if: startsWith(matrix.config.os, 'windows')
+
+      - name: Install dependencies on windows
+        if: startsWith(matrix.config.os, 'windows')
+        run: |
+          ninja --version
+          cmake --version
+
+#      - uses: mymindstorm/setup-emsdk@v9
+#        if: contains(matrix.config.name, 'emscripten')
+#
+#      - name: print emscripten version
+#        if: contains(matrix.config.name, 'emscripten')
+#        run: |
+#          emcc --version
+
+      - name: Install dependencies on ubuntu
+        if: startsWith(matrix.config.name, 'ubuntu')
+        run: |
+          sudo apt-get update --fix-missing
+          sudo apt-get install ninja-build
+          sudo apt-get install libgles2-mesa-dev
+          ninja --version
+          cmake --version
+          gcc --version
+          clang --version
+
+      - name: Install valgrind on ubuntu
+        if: matrix.config.valgrind == 'ON'
+        run: |
+          sudo apt-get update --fix-missing
+          sudo apt-get install valgrind
+          valgrind --version
+
+      - name: Install dependencies on macos
+        if: startsWith(matrix.config.os, 'macos')
+        run: |
+          brew install p7zip cmake ninja
+          ninja --version
+          cmake --version
+
+#      - name: Configure (EMSCRIPTEN)
+#        if: contains(matrix.config.name, 'emscripten')
+#        shell: bash
+#        run: |
+#          export CC=${{ matrix.config.CC }}
+#          export CXX=${{ matrix.config.CXX }}
+#          emcmake \
+#            cmake \
+#            -S MehServer \
+#            -B MehServer/build \
+#            -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+#            -DMEH_SERVER_CI=ON \
+#            -DMEH_SERVER_ASAN=${{ matrix.config.asan }} \
+#            -DMEH_SERVER_LSAN=${{ matrix.config.lsan }} \
+#            -DMEH_SERVER_TSAN=${{ matrix.config.tsan }} \
+#            -DMEH_SERVER_UBSAN=${{ matrix.config.ubsan }} \
+#            -DMEH_SERVER_CODE_COVERAGE=${{ matrix.config.code_coverage }} \
+#            -DMEH_SERVER_VALGRIND=${{ matrix.config.valgrind }} \
+#            -DMEH_SERVER_CLANG_FORMAT_CHECK=${{ matrix.config.clang_format }} \
+#            -DMEH_SERVER_CLANG_FORMAT_FIX=${{ matrix.config.clang_format }} \
+#            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+#            -G "${{ matrix.config.generators }}"
+
+      - name: Configure (CCACHE)
+        if: startsWith(matrix.config.ccache, 'ON')
+        shell: bash
+        run: |
+          export CC=${{ matrix.config.CC }}
+          export CXX=${{ matrix.config.CXX }}
+          cmake \
+            -S MehServer \
+            -B MehServer/build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+            -DMEH_SERVER_CI=ON \
+            -DMEH_SERVER_ASAN=${{ matrix.config.asan }} \
+            -DMEH_SERVER_LSAN=${{ matrix.config.lsan }} \
+            -DMEH_SERVER_TSAN=${{ matrix.config.tsan }} \
+            -DMEH_SERVER_UBSAN=${{ matrix.config.ubsan }} \
+            -DMEH_SERVER_CODE_COVERAGE=${{ matrix.config.code_coverage }} \
+            -DMEH_SERVER_VALGRIND=${{ matrix.config.valgrind }} \
+            -DMEH_SERVER_CLANG_FORMAT_CHECK=${{ matrix.config.clang_format }} \
+            -DMEH_SERVER_CLANG_FORMAT_FIX=${{ matrix.config.clang_format }} \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -G "${{ matrix.config.generators }}"
+
+      - name: Configure
+        if: startsWith(matrix.config.ccache, 'OFF')
+        shell: bash
+        run: |
+          export CC=${{ matrix.config.CC }}
+          export CXX=${{ matrix.config.CXX }}
+          cmake \
+            -S MehServer \
+            -B MehServer/build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+            -DMEH_SERVER_CI=ON \
+            -DMEH_SERVER_ASAN=${{ matrix.config.asan }} \
+            -DMEH_SERVER_LSAN=${{ matrix.config.lsan }} \
+            -DMEH_SERVER_TSAN=${{ matrix.config.tsan }} \
+            -DMEH_SERVER_UBSAN=${{ matrix.config.ubsan }} \
+            -DMEH_SERVER_CODE_COVERAGE=${{ matrix.config.code_coverage }} \
+            -DMEH_SERVER_VALGRIND=${{ matrix.config.valgrind }} \
+            -DMEH_SERVER_CLANG_FORMAT_CHECK=${{ matrix.config.clang_format }} \
+            -DMEH_SERVER_CLANG_FORMAT_FIX=${{ matrix.config.clang_format }} \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -G "${{ matrix.config.generators }}"
+
+      - name: Build
+        shell: bash
+        run: cmake --build MehServer/build --config ${{ matrix.config.build_type }}
+
+      - name: Install Strip
+        shell: bash
+        run: |
+          mkdir -p instdir
+          cmake --install MehServer/build --strip --prefix=instdir
+
+#      - name: Prepare Github Page
+#        shell: bash
+#        if: contains(matrix.config.name, 'emscripten')
+#        run: |
+#          mv MehServer/build/src/meh_server.html MehServer/build/src/index.html
+#          rm -rf MehServer/build/src/CMakeFiles
+#          rm -f MehServer/build/src/cmake_install.cmake
+#
+#      - name: Deploy Github Page
+#        uses: JamesIves/github-pages-deploy-action@4.1.4
+#        if: contains(matrix.config.name, 'emscripten')
+#        with:
+#          branch: gh-pages
+#          folder: MehServer/build/src/
+
+      - name: Tests
+        shell: bash
+        working-directory: MehServer/build
+        run: ctest --C ${{ matrix.config.build_type }} --output-on-failure --no-tests=error
+        if: always() && !contains(matrix.config.name, 'emscripten')
+
+      - name: Benchmarks
+        shell: bash
+        run: cmake --build MehServer/build --config ${{ matrix.config.build_type }} --target meh_server_benchmarks_execute
+        if: always() && !contains(matrix.config.name, 'emscripten')
+
+      - name: Pack
+        shell: bash
+        working-directory: instdir
+        if: always()
+        run: |
+          ls -laR
+          7z a ../${{ matrix.config.name }}.7z .
+
+      - name: Codecov
+        if: always() && matrix.config.code_coverage == 'ON'
+        shell: bash
+        working-directory: MehServer/build
+        run: |
+          mkdir lcov
+          wget -c https://github.com/linux-test-project/lcov/releases/download/v1.15/lcov-1.15.tar.gz -O - | tar -xz -C lcov/
+          cd lcov/lcov-1.15
+          sudo make install
+          cd ../..
+          ./lcov/lcov-1.15/bin/lcov --capture --directory . --output-file coverage.info
+          ./lcov/lcov-1.15/bin/lcov --remove coverage.info '*/build/_deps/*' '*/tests/*' '*/examples/*' '*/benchmarks/*' '*/.ccache/*' '*/.cpmcache/*' '/usr/*' "${HOME}"'/.cache/*' --output-file coverage.info
+          ./lcov/lcov-1.15/bin/lcov --list coverage.info
+          bash <(curl -s https://codecov.io/bash) -f coverage.info -t ${{ secrets.CODECOV_TOKEN }} || echo "Codecov did not collect coverage reports"
+
+      - name: Upload Build Developer Logs
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: 'z-${{ matrix.config.name }}-build_dev_logs'
+          path: |
+            ./MehServer/build/**/*.txt
+            ./MehServer/build/**/*.gcda
+            ./MehServer/build/**/*.gcno
+            ./MehServer/build/**/*codecov*
+            ./MehServer/build/**/*.xml
+            ./MehServer/build/**/*.cmake
+            ./MehServer/build/**/*.log
+            ./MehServer/build/**/*.json
+            ./MehServer/build/**/*.gcov
+            ./MehServer/build/**/*.info
+            ./MehServer/build/**/.*
+            ./MehServer/build/**/*.h
+            ./MehServer/build/**/*.hpp
+            ./MehServer/build/**/*.c
+            ./MehServer/build/**/*.cpp
+            !./MehServer/build/_deps
+            !*/.git/**/*
+          retention-days: 1
+
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          path: ./${{ matrix.config.name }}.7z
+          name: ${{ matrix.config.name }}.7z
+
+      - name: Upload release asset
+        if: github.event_name == 'release' && (github.event.action == 'published' || github.event.action == 'created')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./${{ matrix.config.name }}.7z
+          asset_name: ${{ matrix.config.name }}.7z.zip
+          asset_content_type: application/zip

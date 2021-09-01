@@ -9,7 +9,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  commonlib-linting:
+  linting:
     name: ${{ matrix.config.name }}
     runs-on: ubuntu-latest
     strategy:
@@ -17,22 +17,40 @@ jobs:
       matrix:
         config:
         - {
-            name: "commonlib-lint",
-            library_title: "CommonLib",
-            library_caps: "COMMONLIB",
-            library_lower: "commonlib",
+            name: "core_client-lint",
+            library_title: "CoreClient",
+            library_caps: "CORE_CLIENT",
+            library_lower: "core_client",
           }
         - {
-            name: "myapp-lint",
-            library_title: "MyApp",
-            library_caps: "MYAPP",
-            library_lower: "myapp",
+            name: "core_common-lint",
+            library_title: "CoreCommon",
+            library_caps: "CORE_COMMON",
+            library_lower: "core_common",
           }
         - {
-            name: "mylib-lint",
-            library_title: "MyLib",
-            library_caps: "MYLIB",
-            library_lower: "mylib",
+            name: "core_server-lint",
+            library_title: "CoreServer",
+            library_caps: "CORE_SERVER",
+            library_lower: "core_server",
+          }
+        - {
+            name: "meh_client-lint",
+            library_title: "MehClient",
+            library_caps: "MEH_CLIENT",
+            library_lower: "meh_client",
+          }
+        - {
+            name: "meh_common-lint",
+            library_title: "MehCommon",
+            library_caps: "MEH_COMMON",
+            library_lower: "meh_common",
+          }
+        - {
+            name: "meh_server-lint",
+            library_title: "MehServer",
+            library_caps: "MEH_SERVER",
+            library_lower: "meh_server",
           }
     steps:
       - uses: actions/checkout@v2
