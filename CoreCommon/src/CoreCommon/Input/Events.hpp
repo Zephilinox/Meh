@@ -77,9 +77,9 @@ struct EventVisibility
     Visibility visibility{};
 };
 
-struct EventCharacter
+struct EventText
 {
-    unsigned int character = 0;
+    std::string text;
 };
 
 struct EventMouseEnter
@@ -137,7 +137,7 @@ using Event = std::variant<
     EventMouseWheel,
     EventFocus,
     EventVisibility,
-    EventCharacter,
+    EventText,
     EventMouseEnter,
     EventDeviceChange,
     std::unique_ptr<EventCustom>>;

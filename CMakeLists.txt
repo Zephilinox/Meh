@@ -31,7 +31,6 @@ endif()
 
 function(set_vars_and_add project_name project_name_caps)
     set("${project_name_caps}_TESTS" "${MEH_IS_ROOT}")
-    message(STATUS "${project_name_caps}_TESTS = ${project_name_caps_TESTS}")
     set("${project_name_caps}_BENCHMARKS" "${MEH_IS_ROOT}")
     set("${project_name_caps}_CLANG_TIDY_CHECK" "${USE_CLANG_TIDY}")
     set("${project_name_caps}_CLANG_FORMAT_CHECK" "${USE_CLANG_FORMAT}")

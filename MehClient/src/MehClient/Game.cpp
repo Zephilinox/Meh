@@ -5,26 +5,21 @@
 //LIBS
 #ifdef __EMSCRIPTEN__
     #include <emscripten.h>
-    #include <cstring> //memcpy for SDL
-    #include <SDL.h>
 
     #define GL_GLEXT_PROTOTYPES 1
     #include <SDL_opengles2.h>
 #else
-    #include <cstring> //memcpy for SDL
-    #include <SDL.h>
     #undef main
-
     #include <glad/glad.h>
 #endif
 
 #include <MehCommon/Library.hpp>
 #include <CoreCommon/Window/WindowSDL.hpp>
-#include <CoreCommon/Input/Input.hpp>
+#include <CoreCommon/IMGUI/IMGUI_SDL_GL.hpp>
 
+#include <cstring> //memcpy for SDL
+#include <SDL.h>
 #include <imgui.h>
-#include <backends/imgui_impl_sdl.h>
-#include <backends/imgui_impl_opengl3.h>
 #include <spdlog/spdlog.h>
 
 using namespace meh::client;
@@ -68,6 +63,8 @@ Game::Game()
 
     spdlog::info("OpenGLES version loaded: {}.{}\n", GLVersion.major, GLVersion.minor);
 
+    imgui = std::make_unique<core::common::IMGUI_SDL_GL>(*window, glc);
+
     //todo: this is nasty
     {
         // Create Vertex Array Object
@@ -105,29 +102,15 @@ Game::Game()
         glEnableVertexAttribArray(static_cast<GLuint>(posAttrib));
         glVertexAttribPointer(static_cast<GLuint>(posAttrib), 2, GL_FLOAT, GL_FALSE, 0, nullptr);
     }
-
-    //todo: IMGUI abstraction
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    io = &ImGui::GetIO();
-
-    //todo: IMGUI needs to know about openGL?
-    ImGui_ImplSDL2_InitForOpenGL(window_sdl->getRawWindow(), glc);
-    ImGui_ImplOpenGL3_Init("#version 100"); // WebGL1 with OpenGLES2
-    //ImGui_ImplOpenGL3_Init("#version 300 es"); // WebGL2 with OpenGLES2
-    ImGui::StyleColorsClassic();
 }
 
 Game::~Game()
 {
-    //todo: let IMGUI abstraction do these
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplSDL2_Shutdown();
-    ImGui::DestroyContext();
+    imgui.reset();
 
-    SDL_GL_DeleteContext(glc);                     //todo: let renderer do it
-    SDL_DestroyWindow(window_sdl->getRawWindow()); //todo: let WindowSDL do it
-    SDL_Quit();                                    //todo: let something else do it. not sure if window is correct, what if we end up wanting multiple windows?
+    SDL_GL_DeleteContext(glc); //todo: let renderer do it
+    window.reset();
+    SDL_Quit(); //todo: let something else do it. not sure if window is correct, what if we end up wanting multiple windows?
 }
 
 int Game::run()
@@ -149,18 +132,27 @@ void Game::events()
     core::common::Event event;
     while (window->poll(event))
     {
+        auto consumed = imgui->process(event);
+        if (consumed)
+            continue;
+
         input.process(event);
+        auto visitor = core::common::overload{
+            [&](core::common::EventQuit&) {
+                spdlog::info("Closing Client");
+                window->close();
+            },
+            [](auto&&) {
+
+            }
+        };
+        std::visit(visitor, event);
     }
 }
 
 void Game::update()
 {
-    //todo: abstract over IMGUI
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame(window_sdl->getRawWindow());
-    ImGui::NewFrame();
-
-    //todo: rest of this function is more like "game code", would probably live in entities somewhere
+    imgui->update(*window);
 
     if (show_demo_window)
         ImGui::ShowDemoWindow(&show_demo_window);
@@ -187,10 +179,6 @@ void Game::update()
 
 void Game::render()
 {
-    //note: this call does not actually render anything, rather, it batches all of the IMGUI data in to vertices, preparing it to be rendered
-    //this is done here instead of in update(), as we may end up with multiple updates per render, which would result in unnecessary work preparing IMGUI
-    ImGui::Render();
-
     //todo: where should this live? in the renderer? do we need to use SDL to make the GL context current? can we use the GL API directly?
     SDL_GL_MakeCurrent(window_sdl->getRawWindow(), glc);
 
@@ -201,15 +189,13 @@ void Game::render()
     // Adjust the viewport in case it is resized
     //todo: this is grabbing it from IMGUI, but we can just grab it from the window.
     //      have the renderer process window resize events or something? or does it need to be done exactly here?
-    glViewport(0, 0, static_cast<int>(io->DisplaySize.x), static_cast<int>(io->DisplaySize.y));
+    glViewport(0, 0, static_cast<int>(imgui->getRawIMGUI()->DisplaySize.x), static_cast<int>(imgui->getRawIMGUI()->DisplaySize.y));
 
     // Draw a triangle from the 3 vertices, underneath IMGUI
     //todo: renderer stuff innit
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    // Draw IMGUI
-    //todo: imgui abstraction stuff innit. can the renderer have a draw(ImDrawData*) function?
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    imgui->render();
 
     //todo: seems like window should do this, but then it's GL specific? so renderer?
     SDL_GL_SwapWindow(window_sdl->getRawWindow());
