@@ -5,6 +5,7 @@
 //LIBS
 #include <CoreCommon/Window/Window.hpp>
 #include <CoreCommon/Input/Input.hpp>
+#include <CoreCommon/IMGUI/IMGUI.hpp>
 
 //STD
 #include <array>
@@ -15,9 +16,6 @@ namespace core::common
 class WindowSDL;
 
 }
-
-//todo: won't need this when we have abstractions
-struct ImGuiIO;
 
 namespace meh::client
 {
@@ -58,8 +56,7 @@ private:
                                  "  gl_FragColor = vec4 (1.0, 1.0, 1.0, 1.0 );\n"
                                  "}                                            \n";
 
-    //todo: remove once we have IMGUI abstraction
-    ImGuiIO* io = nullptr;
+    std::unique_ptr<core::common::IMGUI> imgui;
 };
 
 } // namespace meh::client

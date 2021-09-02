@@ -63,7 +63,7 @@ bool WindowSDL::poll(Event& event)
     {
     case SDL_QUIT:
     {
-        spdlog::info("App is quitting");
+        //spdlog::info("App is quitting");
         event = EventQuit{};
         break;
     }
@@ -226,7 +226,7 @@ bool WindowSDL::poll(Event& event)
     }
     case SDL_TEXTEDITING:
     {
-        spdlog::info("In window {}, editing text {}, with a start of {} and a length of {}",
+        spdlog::info("In window {}, editing text '{}', with a start of '{}' and a length of '{}'",
                      sdl_event.edit.windowID,
                      sdl_event.edit.text,
                      sdl_event.edit.start,
@@ -235,9 +235,10 @@ bool WindowSDL::poll(Event& event)
     }
     case SDL_TEXTINPUT:
     {
-        spdlog::info("In window {}, inputing text {}",
+        /*spdlog::info("In window {}, inputing text {}",
                      sdl_event.edit.windowID,
-                     sdl_event.edit.text);
+                     sdl_event.edit.text);*/
+        event = EventText{ &sdl_event.edit.text[0] };
         break;
     }
     case SDL_KEYMAPCHANGED:

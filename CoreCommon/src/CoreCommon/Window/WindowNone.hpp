@@ -38,7 +38,7 @@ public:
     virtual void setWidth(unsigned int width) final;
     virtual void setHeight(unsigned int height) final;
 
-    static constexpr std::int32_t type_v = 2;
+    static constexpr std::int32_t type_v = 1;
 
 private:
     bool is_open = true;

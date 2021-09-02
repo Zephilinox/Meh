@@ -43,7 +43,7 @@ public:
 
     SDL_Window* getRawWindow() const;
 
-    static constexpr std::int32_t type_v = 1;
+    static constexpr std::int32_t type_v = 2;
 
 private:
     bool is_open = true;
