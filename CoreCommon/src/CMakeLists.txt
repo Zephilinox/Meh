@@ -34,6 +34,8 @@ add_library(core_common
 )
 add_library(core::common ALIAS core_common)
 
+target_precompile_headers(core_common PUBLIC "CoreCommon/pch.hpp")
+
 target_include_directories(core_common PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
