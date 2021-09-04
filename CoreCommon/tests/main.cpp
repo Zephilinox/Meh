@@ -1,5 +1,6 @@
 //SELF
 #include "core_common.hpp"
+#include "Net/WebSocketPacket.test.hpp"
 #include "Signal.test.hpp"
 
 //LIBS
@@ -17,7 +18,7 @@ auto main(int argc, char** argv) -> int
     context.setOption("--count", static_cast<int>(true));
     context.setOption("--list-test-cases", static_cast<int>(true));
     context.setOption("--list-test-suites", static_cast<int>(true));
-    context.setOption("--success", static_cast<int>(false));
+    context.setOption("--success", static_cast<int>(true));
     context.setOption("--exit", static_cast<int>(true));
 
     const int result = context.run();

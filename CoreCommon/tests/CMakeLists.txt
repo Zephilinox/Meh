@@ -6,6 +6,7 @@ add_executable(core_common_tests
     "main.cpp"
     "core_common.hpp"
     "Signal.test.hpp"
+    "Net/WebSocketPacket.test.hpp"
 )
 
 configure_target(core_common_tests ${CORE_COMMON_CODE_COVERAGE})

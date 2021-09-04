@@ -30,7 +30,7 @@ add_library(core_common
     "CoreCommon/IMGUI/IMGUI_SDL_GL.hpp"
     "CoreCommon/IMGUI/IMGUI_SDL_GL.cpp"
 
-    "CoreCommon/WebSocket/WebSocketPackets.hpp"
+    "CoreCommon/Net/WebSocketPackets.hpp"
 )
 add_library(core::common ALIAS core_common)
 
