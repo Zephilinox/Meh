@@ -5,7 +5,7 @@
 
 namespace core::common::net
 {
-enum class MsgClientServer
+enum class MsgCoreClientServer
 {
     ClientServerBinaryBegin = 64,
     Ping = ClientServerBinaryBegin,
@@ -14,7 +14,7 @@ enum class MsgClientServer
     Input
 };
 
-enum class MsgServerClient
+enum class MsgCoreServerClient
 {
     ServerClientBinaryBegin = 0,
     Pong = ServerClientBinaryBegin,
