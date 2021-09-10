@@ -1,33 +1,36 @@
 #pragma once
 
-#include "CommonLib/Renderer/RendererData.hpp"
-#include "Camera/Camera.hpp"
+//SELF
+#include "CoreCommon/Renderer/RendererData.hpp"
+#include "CoreCommon/Camera/Camera.hpp"
 
-namespace meh::common
+//LIBS
+
+//STD
+
+namespace core::common
 {
-    class Window;
-}
 
-namespace meh::renderer
+class Window;
+
+class RendererBase
 {
-
-class RendererBase {
 public:
     RendererBase() = default;
     virtual ~RendererBase() = default;
 
     // Initialisation.
-    virtual bool init(meh::common::Window& win) = 0;
+    virtual bool init(Window& win) = 0;
 
     // Settings Configuration
     virtual void updateResolution(int x, int y) = 0;
 
     // RenderState Configuration.
     virtual void draw() = 0;
-    virtual void setCamera(meh::scene::Camera& camera) = 0;
+    virtual void setCamera(Camera& camera) = 0;
 
     // Update Screen. (This should only be avaliable to the core of the system.)
     virtual void present() = 0;
 };
 
-}
+} // namespace core::common

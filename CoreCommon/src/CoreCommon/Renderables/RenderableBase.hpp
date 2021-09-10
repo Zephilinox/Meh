@@ -1,8 +1,13 @@
 #pragma once
 
+//SELF
+
+//LIBS
+
+//STD
 #include <cstdint>
 
-namespace meh::renderables
+namespace core::common
 {
 
 class RenderableBase
@@ -18,4 +23,4 @@ public:
     virtual uint8_t* indexBuffer() = 0;
 };
 
-}
+} // namespace core::common

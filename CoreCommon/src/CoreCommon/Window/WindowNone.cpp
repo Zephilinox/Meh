@@ -83,7 +83,7 @@ void WindowNone::setHeight(unsigned int height)
     settings.height = height;
 }
 
-bool WindowNone::setupRenderingContext(const meh::renderer::RenderContext& rc)
+bool WindowNone::setupRenderingContext(const RenderContext& rc)
 {
     return true;
 }

@@ -31,6 +31,16 @@ add_library(core_common
     "CoreCommon/IMGUI/IMGUI_SDL_GL.cpp"
 
     "CoreCommon/WebSocket/WebSocketPackets.hpp"
+
+    "CoreCommon/Renderer/GLES/RendererGLES.hpp"
+    "CoreCommon/Renderer/GLES/RendererGLES.cpp"
+    "CoreCommon/Renderer/RendererBase.hpp"
+    "CoreCommon/Renderer/RendererData.hpp"
+
+    "CoreCommon/Renderables/RenderableBase.hpp"
+
+    "CoreCommon/Camera/Camera.hpp"
+    "CoreCommon/Camera/Camera.cpp"
 )
 add_library(core::common ALIAS core_common)
 

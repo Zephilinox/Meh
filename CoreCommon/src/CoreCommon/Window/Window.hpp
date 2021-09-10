@@ -2,15 +2,14 @@
 
 //SELF
 #include "CoreCommon/Input/Events.hpp"
+#include "CoreCommon/Renderer/RendererData.hpp"
 
 //LIBS
 
 //STD
 #include <string>
 
-#include "CommonLib/Renderer/RendererData.hpp"
-
-namespace meh::common
+namespace core::common
 {
 
 class Window
@@ -54,7 +53,7 @@ public:
     virtual void setWidth(unsigned int width) = 0;
     virtual void setHeight(unsigned int height) = 0;
 
-    virtual bool setupRenderingContext(const meh::renderer::RenderContext& rc) = 0;
+    virtual bool setupRenderingContext(const RenderContext& rc) = 0;
 
     [[nodiscard]] std::int32_t getType() const { return type; }
 

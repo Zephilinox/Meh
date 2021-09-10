@@ -1,9 +1,14 @@
 #pragma once
 
-#include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
+//SELF
 
-namespace meh::scene
+//LIBS
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+
+///STD
+
+namespace core::common
 {
 
 class Camera
@@ -28,4 +33,4 @@ private:
     float farZ;
 };
 
-}
+} // namespace core::common

@@ -42,7 +42,7 @@ public:
     virtual void setWidth(unsigned int width) final;
     virtual void setHeight(unsigned int height) final;
 
-    virtual bool setupRenderingContext(const meh::renderer::RenderContext& rc) final;
+    virtual bool setupRenderingContext(const RenderContext& rc) final;
 
     SDL_Window* getRawWindow() const;
 

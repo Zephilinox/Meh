@@ -1,10 +1,18 @@
+#include "RendererGLES.hpp"
+
+//SELF
+#include "CoreCommon/Window/Window.hpp"
+#include "CoreCommon/Renderer/GLES/RendererGLES.hpp"
+
+//LIBS
 #include <glad/glad.h>
 #include <spdlog/spdlog.h>
-#include "CommonLib/Window/Window.hpp"
 
-#include "Renderer/GLES/RendererGLES.hpp"
+//STD
 
-bool meh::renderer::RendererGLES::init(meh::common::Window& win)
+using namespace core::common;
+
+bool RendererGLES::init(Window& win)
 {
     // Set up for GLES Rendering.
     // We can get context information for setup from the window itself if
@@ -13,8 +21,10 @@ bool meh::renderer::RendererGLES::init(meh::common::Window& win)
     rc.type = RENDERER_GLES;
     rc.versionMajor = 2;
     rc.versionMinor = 0;
-    rc.rBits = 8; rc.gBits = 8;
-    rc.bBits = 8; rc.aBits = 8;
+    rc.rBits = 8;
+    rc.gBits = 8;
+    rc.bBits = 8;
+    rc.aBits = 8;
 
     auto result = win.setupRenderingContext(rc);
 
@@ -25,27 +35,27 @@ bool meh::renderer::RendererGLES::init(meh::common::Window& win)
     return result;
 }
 
-void meh::renderer::RendererGLES::updateResolution(int x, int y)
+void RendererGLES::updateResolution(int x, int y)
 {
     glViewport(0, 0, x, y);
 }
 
-void meh::renderer::RendererGLES::draw()
+void RendererGLES::draw()
 {
-
 }
 
-void meh::renderer::RendererGLES::setCamera(meh::scene::Camera& camera)
+void RendererGLES::setCamera(Camera& camera)
 {
     primaryCamera = &camera;
 }
 
-void meh::renderer::RendererGLES::present()
+void RendererGLES::present()
 {
     // TODO - Process the renderables and draw them to
     // the screen here.
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    if (!primaryCamera) {
+    if (!primaryCamera)
+    {
         spdlog::error("RendererGLES: PrimaryCamera is not set. Screen will be blank.");
         return;
     }
